@@ -3,6 +3,8 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <chrono>
+
 
 using namespace std;
 
@@ -42,11 +44,20 @@ void showVector(vector <rpqcontainer> data) {
 	cout << endl;
 }
 
+auto timeMeasure(int n, vector <rpqcontainer> d, int(*function)(int , vector <rpqcontainer>)) {
+	auto start = std::chrono::high_resolution_clock::now();
+	function(n, d);
+	auto stop = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+	cout << "Czas wykonywania sie algorytmu:" << duration.count() << endl;
+	return duration;
+}
+
 int main()
 {
 	ifstream plik; 
 	vector <rpqcontainer> data;
-	plik.open("data100.txt"); //otwarcie pliku
+	plik.open("data500.txt"); //otwarcie pliku
 	int n;
 	int parameters;
 	plik >> n;
@@ -54,7 +65,7 @@ int main()
 
 	for (int i = 0; i < n; i++) {
 	//while (!plik.eof()){
-		int control;
+	//		int control;
 		rpqcontainer tmp;
 		plik >> tmp.r;
 		plik >> tmp.p;
@@ -67,21 +78,20 @@ int main()
 
 	plik.close();
 
+	// CZESC PRZED SORTOWANIEM
+	timeMeasure(n,data,cmaxFunc);
 	int beforeSort = cmaxFunc(n, data);
 	//showVector(data);
-	sort(data.begin(), data.end(), func);
 
+
+	// CZESC PO SORTOWANIU
+	sort(data.begin(), data.end(), func);
+	timeMeasure(n, data, cmaxFunc);
 	//showVector(data);
 	int afterSort = cmaxFunc(n, data);
-	
-	
 
 	cout << "Przed: " << beforeSort << endl << "Po: " << afterSort << endl;
-
 	cout << endl << endl;
-
-
-
-
+	
 	return 0;
 }
