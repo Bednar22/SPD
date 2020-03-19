@@ -60,40 +60,25 @@ vector<rpqcontainer> Schrage(int n, vector <rpqcontainer> data){
 
 int main()
 {
-	ifstream plik; 
 	vector <rpqcontainer> data;
 	int n;
 	int parameters;
-	plik.open("data20.txt"); //otwarcie pliku
-	plik >> n;
-	plik >> parameters;
 
-	for (int i = 0; i < n; i++) {
-	//while (!plik.eof()){
-	//		int control;
-		rpqcontainer tmp;
-		plik >> tmp.r;
-		plik >> tmp.p;
-		plik >> tmp.q;
-		
-		data.push_back(tmp);
-	} 
+	tie(n, parameters, data) = getDataFromFile("data10.txt"); 
 
-	plik.close();
-
-	// CZESC PRZED SORTOWANIE
+	// PART BEFORE SORT
 	vector <rpqcontainer> pom = Schrage(n, data);
 	int schrag = cmaxFunc(n,pom);
 	cout << "SCHRAGE: " << schrag << endl;
-	//timeMeasure(n,data,cmaxFunc);
+	timeMeasure(n,data,cmaxFunc);
 	int beforeSort = cmaxFunc(n, data);
 	//showVector(data);
 
 
 
-	// CZESC PO SORTOWANIU
+	// PART AFTER SORT
 	sort(data.begin(), data.end(), func);
-	//timeMeasure(n, data, cmaxFunc);
+	timeMeasure(n, data, cmaxFunc);
 //	showVector(data);
 	int afterSort = cmaxFunc(n, data);
 
