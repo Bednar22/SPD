@@ -1,23 +1,16 @@
-#include <stdio.h>
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <algorithm>
-#include <chrono>
-
+#include "utility.h"
 
 using namespace std;
 
-struct rpqcontainer {
-	int r;
-	int p;
-	int q;
-};
-
-bool func(const rpqcontainer& a, const rpqcontainer& b)
-{
-	return a.r < b.r;
+auto timeMeasure(int n, vector <rpqcontainer> d, int(*function)(int, vector <rpqcontainer>)) {
+	auto start = std::chrono::high_resolution_clock::now();
+	function(n, d);
+	auto stop = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+	cout << "Czas wykonywania sie algorytmu:" << duration.count() << endl;
+	return duration;
 }
+
 
 int cmaxFunc(int n, vector <rpqcontainer> d) {
 	int* S = new int[n];
@@ -37,29 +30,41 @@ int cmaxFunc(int n, vector <rpqcontainer> d) {
 	return Cmax;
 }
 
-void showVector(vector <rpqcontainer> data) {
-	for (int i = 0; i < data.size(); i++) {
-		cout << "Wartosc r=  " << data[i].r <<" p= " << data[i].p << " q= " << data[i].q << "  "<<endl;
-	}
-	cout << endl;
-}
+vector<rpqcontainer> Schrage(int n, vector <rpqcontainer> data){
+	int k = 0;
+	vector <rpqcontainer> orderedColletion;
+	int t = findMinValueR(data).r;
+	vector <rpqcontainer> PI;
 
-auto timeMeasure(int n, vector <rpqcontainer> d, int(*function)(int , vector <rpqcontainer>)) {
-	auto start = std::chrono::high_resolution_clock::now();
-	function(n, d);
-	auto stop = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
-	cout << "Czas wykonywania sie algorytmu:" << duration.count() << endl;
-	return duration;
+	while ((orderedColletion.empty() == false) || (data.empty() == false)) {
+		while ( (data.empty()==false) && (findMinValueR(data).r <= t) ) {
+			//showVector(data);
+			rpqcontainer tmp = findMinValueR(data);
+			orderedColletion.push_back(tmp);
+			RemoveElement(data, tmp);
+			//showVector(data);
+		}
+		if (orderedColletion.empty() == false) {
+			rpqcontainer tmp2 = findMaxValueQ(orderedColletion);
+			RemoveElement(orderedColletion, tmp2);
+			PI.push_back(tmp2);
+			t = t + tmp2.p;
+			k = k + 1;
+		}
+		else {
+			t = findMinValueR(data).r;
+		}
+	}
+	return PI;
 }
 
 int main()
 {
 	ifstream plik; 
 	vector <rpqcontainer> data;
-	plik.open("data500.txt"); //otwarcie pliku
 	int n;
 	int parameters;
+	plik.open("data20.txt"); //otwarcie pliku
 	plik >> n;
 	plik >> parameters;
 
@@ -71,23 +76,25 @@ int main()
 		plik >> tmp.p;
 		plik >> tmp.q;
 		
-		
-	//	cout << "dupa" ;
 		data.push_back(tmp);
 	} 
 
 	plik.close();
 
-	// CZESC PRZED SORTOWANIEM
-	timeMeasure(n,data,cmaxFunc);
+	// CZESC PRZED SORTOWANIE
+	vector <rpqcontainer> pom = Schrage(n, data);
+	int schrag = cmaxFunc(n,pom);
+	cout << "SCHRAGE: " << schrag << endl;
+	//timeMeasure(n,data,cmaxFunc);
 	int beforeSort = cmaxFunc(n, data);
 	//showVector(data);
 
 
+
 	// CZESC PO SORTOWANIU
 	sort(data.begin(), data.end(), func);
-	timeMeasure(n, data, cmaxFunc);
-	//showVector(data);
+	//timeMeasure(n, data, cmaxFunc);
+//	showVector(data);
 	int afterSort = cmaxFunc(n, data);
 
 	cout << "Przed: " << beforeSort << endl << "Po: " << afterSort << endl;
