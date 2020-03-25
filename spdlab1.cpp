@@ -20,14 +20,14 @@ auto timeMeasure2(int n, vector <rpqcontainer> data, vector<rpqcontainer>(*funct
 	//cout << "Czas wykonywania sie algorytmu:" << duration.count() << endl;
 	return duration;
 }
-
+//cbyle co
 
 int main()
 {
 	vector <rpqcontainer> data;
 	int n;
 	int parameters;
-	tie(n, parameters, data) = getDataFromFile("data10.txt"); 
+	tie(n, parameters, data) = getDataFromFile("data100.txt"); 
 
 
 	// SCHRAGE
