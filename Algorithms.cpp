@@ -79,20 +79,20 @@ vector<rpqcontainer> schrageWithQueue(int n, vector <rpqcontainer> data) {
 // SCHRAGE PMTN
 
 int schragePMTN(int n, vector <rpqcontainer> data) {
+	
 	int Cmax = 0;
-	int k = 0;
 	vector <rpqcontainer> orderedColletion;
-	int t = 0; //findMinValueR(data).r
-	vector <rpqcontainer> PI;
+	int t = 0; 
 	rpqcontainer l;
-	l.q=numeric_limits<int>::max();
-	rpqcontainer tmp;
+	l.q=numeric_limits<int>::max(); // INFINITY
+	rpqcontainer tmp; //just to help
+	
 	while ((orderedColletion.empty() == false) || (data.empty() == false)) {
 		while ((data.empty() == false) && (findMinValueR(data).r <= t)) {
 			tmp = findMinValueR(data);
 			orderedColletion.push_back(tmp);
 			RemoveElement(data, tmp);
-	
+			cout << "TMP 1 "<< "R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
 			if (tmp.q>l.q) { //block added in PTMN
 				l.p = t - tmp.r;
 				t = tmp.r;
@@ -105,14 +105,57 @@ int schragePMTN(int n, vector <rpqcontainer> data) {
 		if (orderedColletion.empty() == false) {
 			tmp = findMaxValueQ(orderedColletion);
 			RemoveElement(orderedColletion, tmp);
-			PI.push_back(tmp);
+			cout << "TMP 2 R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
 			l = tmp;
 			t = t + tmp.p;
-			k = k + 1;
 			Cmax = max(Cmax, t+tmp.q);
 		}
 		else {
 			t = findMinValueR(data).r;
+		}
+	}
+	return Cmax;
+}
+
+// SCHRAGE PMTN WITH QUEUE 
+
+int schragePMTNWithQueue(int n, vector <rpqcontainer> data) {
+
+	//special structures to use in schrage algorithm:
+	priority_queue<rpqcontainer, vector<rpqcontainer>, CompareQ> queue;
+	sort(data.begin(), data.end(), func3);	
+	// used variables
+	int Cmax = 0;
+	int t = 0;
+	rpqcontainer l;
+	l.q = numeric_limits<int>::max(); // INFINITY
+	rpqcontainer tmp;
+
+	while ((queue.empty() == false) || (data.empty() == false)) {
+		while ((data.empty() == false) && (data.back().r <= t)) {
+			tmp = data.back();
+			queue.push(tmp);
+			data.pop_back();
+			//cout << "QUEUE TMP 1 R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
+			if (tmp.q > l.q) { //block added in PTMN
+				l.p = t - tmp.r;
+				t = tmp.r;
+				if (l.p > 0) {
+					queue.push(tmp);
+				}
+			}
+		}
+		if (queue.empty() == false) {
+			tmp = queue.top();
+			queue.pop();
+			//cout << "QUEUE TMP2: R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
+			
+			l = tmp;
+			t = t + tmp.p;
+			Cmax = max(Cmax, t + tmp.q);
+		}
+		else {
+			t = data.back().r;
 		}
 	}
 	return Cmax;

@@ -27,7 +27,7 @@ int main()
 	vector <rpqcontainer> data;
 	int n;
 	int parameters;
-	tie(n, parameters, data) = getDataFromFile("data100.txt"); 
+	tie(n, parameters, data) = getDataFromFile("data10.txt"); 
 
 
 	//// SCHRAGE
@@ -46,10 +46,12 @@ int main()
 	//cout << "SCHRAGE WITH QUEUE: " << timeSchrageWithQueue.count() << endl;
 	
 	// SCHRAGE PTMN
-	
 	int schragPMTN = schragePMTN(n, data);
 	cout << "SCHRAGE PMTN: " << schragPMTN << endl;
 
+	// SCHRAGE PTMN WITH QUEUE
+	int schragPMTNWithQueue = schragePMTNWithQueue(n, data);
+	cout << "SCHRAGE PMTN WITH QUEUE: " << schragPMTNWithQueue << endl;
 
 	// PART BEFORE SORT
 
