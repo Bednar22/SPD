@@ -53,6 +53,12 @@ bool func3(const rpqcontainer& a, const rpqcontainer& b)
 	return a.r > b.r;
 }
 
+bool funcRQ(const rpqcontainer& a, const rpqcontainer& b)
+{
+	return a.r + a.q < b.r + b.q;
+}
+
+
 // Finding element of vector data with min r value
 rpqcontainer findMinValueR(vector <rpqcontainer>& data) {
 	sort(data.begin(), data.end(), func);

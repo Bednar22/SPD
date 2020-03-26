@@ -14,6 +14,16 @@ struct rpqcontainer {
 	int r;
 	int p;
 	int q;
+
+
+    rpqcontainer& operator = (const rpqcontainer &rpqcopy) {
+        r = rpqcopy.r;
+        p= rpqcopy.p;
+        q = rpqcopy.q;
+        return *this;
+    }
+
+    rpqcontainer(){ r = 0; p = 0; q = 0; }
 };
 
 struct CompareQ {
@@ -27,6 +37,7 @@ int findSameVector(rpqcontainer sample, vector <rpqcontainer> data);
 bool func(const rpqcontainer& a, const rpqcontainer& b);
 bool func2(const rpqcontainer& a, const rpqcontainer& b);
 bool func3(const rpqcontainer& a, const rpqcontainer& b);
+bool funcRQ(const rpqcontainer& a, const rpqcontainer& b);
 rpqcontainer findMinValueR(vector <rpqcontainer> &data);
 rpqcontainer findMaxValueQ(vector <rpqcontainer> &data);
 void showVector(vector <rpqcontainer>& data);
