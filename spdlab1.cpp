@@ -20,15 +20,28 @@ auto timeMeasure2(int n, vector <rpqcontainer> data, vector<rpqcontainer>(*funct
 	//cout << "Czas wykonywania sie algorytmu:" << duration.count() << endl;
 	return duration;
 }
-//cbyle co
+
 
 int main()
 {
 	vector <rpqcontainer> data;
 	int n;
 	int parameters;
-	tie(n, parameters, data) = getDataFromFile("data10.txt"); 
+	tie(n, parameters, data) = getDataFromFile("data50.txt"); 
 
+	/*cout << " TEST " << endl;
+	showVector(data);
+	cout << endl << endl; 
+	priority_queue<rpqcontainer, vector<rpqcontainer>, CompareQ> q;
+	for (int i = 0; i < data.size(); i++) {
+		q.push(data[i]);
+	}
+	print_queue(q);
+	cout << ".................................KONIEC TESTU..........................." << endl;*/
+
+	// SCHRAGE PTMN
+	int schragPMTN = schragePMTN(n, data);
+	cout << "SCHRAGE PMTN: " << schragPMTN << endl;
 
 	//// SCHRAGE
 	vector <rpqcontainer> pom = Schrage(n, data);
@@ -45,10 +58,6 @@ int main()
 	//auto timeSchrageWithQueue = timeMeasure2(n, data, schrageWithQueue);
 	//cout << "SCHRAGE WITH QUEUE: " << timeSchrageWithQueue.count() << endl;
 	
-	// SCHRAGE PTMN
-	int schragPMTN = schragePMTN(n, data);
-	cout << "SCHRAGE PMTN: " << schragPMTN << endl;
-
 	// SCHRAGE PTMN WITH QUEUE
 	int schragPMTNWithQueue = schragePMTNWithQueue(n, data);
 	cout << "SCHRAGE PMTN WITH QUEUE: " << schragPMTNWithQueue << endl;
@@ -66,8 +75,6 @@ int main()
 
 	cout << "Przed: " << beforeSort << endl << "Po: " << afterSort << endl;
 	cout << endl << endl;
-	
-	rpqcontainer test;
 
 	return 0;
 }

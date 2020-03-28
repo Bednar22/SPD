@@ -1,5 +1,6 @@
 #include "utility.h"
 
+
 // getting data from file, to use this call:
 // tie(par1,par2,par3) = getDataFromFIle("filename");
 // par1, par2 --> int, par3 --> vector <rpqcontainer> (declared before this function)
@@ -27,8 +28,7 @@
 int findSameVector(rpqcontainer sample, vector <rpqcontainer>& data) {
 	
 	int index=0;
-
-	for (int i = 0; i < data.size(); i++) {
+	for (size_t i = 0; i < data.size(); i++) {
 		if ((data[i].r == sample.r) && (data[i].p == sample.p) && (data[i].q == sample.q)) {
 			index = i;
 		}
@@ -48,6 +48,11 @@ bool func2(const rpqcontainer& a, const rpqcontainer& b)
 	return a.q > b.q;
 }
 
+bool func4(const rpqcontainer& a, const rpqcontainer& b)
+{
+	return a.q < b.q;
+}
+
 bool func3(const rpqcontainer& a, const rpqcontainer& b)
 {
 	return a.r > b.r;
@@ -60,26 +65,27 @@ bool funcRQ(const rpqcontainer& a, const rpqcontainer& b)
 
 
 // Finding element of vector data with min r value
-rpqcontainer findMinValueR(vector <rpqcontainer>& data) {
+rpqcontainer findMinValueR(vector <rpqcontainer> data) {
 	sort(data.begin(), data.end(), func);
 	return data[0];
 }
 
 // Finding element of vector data with max q value
-rpqcontainer findMaxValueQ(vector <rpqcontainer>& data) {
+rpqcontainer findMaxValueQ(vector <rpqcontainer> data) {
 	sort(data.begin(), data.end(), func2);
 	return data[0];
 }
 
-// Printing vector on screen, just for tests
+ //Printing vector on screen, just for tests
 void showVector(vector <rpqcontainer> data) {
 	for (int i = 0; i < data.size(); i++) {
 		cout << "Wartosc r=  " << data[i].r << " p= " << data[i].p << " q= " << data[i].q << "  " << endl;
 	}
-	cout << endl;
+	//cout << endl;
 }
 
-// Removing element from vector data (finding the same element as exampl)
+
+ /*Removing element from vector data (finding the same element as exampl)*/
 void RemoveElement(vector<rpqcontainer>& data, const rpqcontainer exampl) {
 	data.erase(
 		std::remove_if(data.begin(), data.end(), [&](rpqcontainer const& d) {
@@ -87,3 +93,17 @@ void RemoveElement(vector<rpqcontainer>& data, const rpqcontainer exampl) {
 			}),
 		data.end());
 }
+
+
+//void RemoveElement(vector<rpqcontainer>& data, rpqcontainer exampl) {
+//	vector<rpqcontainer>::iterator vecIterator = data.begin();
+//	while (vecIterator != data.end()) {
+//		if ((vecIterator -> r == exampl.r)&& (vecIterator -> p == exampl.p)&& (vecIterator -> q == exampl.q)) {
+//			vecIterator = data.erase(vecIterator);
+//			break;
+//		} else{
+//			vecIterator++;
+//		}
+//	}
+//
+//}
