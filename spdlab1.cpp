@@ -27,17 +27,7 @@ int main()
 	vector <rpqcontainer> data;
 	int n;
 	int parameters;
-	tie(n, parameters, data) = getDataFromFile("data50.txt"); 
-
-	/*cout << " TEST " << endl;
-	showVector(data);
-	cout << endl << endl; 
-	priority_queue<rpqcontainer, vector<rpqcontainer>, CompareQ> q;
-	for (int i = 0; i < data.size(); i++) {
-		q.push(data[i]);
-	}
-	print_queue(q);
-	cout << ".................................KONIEC TESTU..........................." << endl;*/
+	tie(n, parameters, data) = getDataFromFile("data10.txt"); 
 
 	// SCHRAGE PTMN
 	int schragPMTN = schragePMTN(n, data);

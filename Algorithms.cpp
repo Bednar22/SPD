@@ -79,66 +79,38 @@ vector<rpqcontainer> schrageWithQueue(int n, vector <rpqcontainer> data) {
 // SCHRAGE PMTN
 
 int schragePMTN(int n, vector <rpqcontainer> data) {
-	
-	int k = 0;
 	int Cmax = 0;
 	vector <rpqcontainer> orderedColletion;
-	int t = 0; 
-	vector <rpqcontainer> PI;
+	int t = 0;
 	rpqcontainer l;
 	l.q=numeric_limits<int>::max(); // INFINITY
 	rpqcontainer tmp, tmp2; //just to help
-	// cout << "TMP 1 "<< "R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
 
 	while ((orderedColletion.empty() == false) || (data.empty() == false)) {
 		while ((data.empty() == false) && (findMinValueR(data).r <= t)) {
-			
-			//cout << "WEKTOR N_N" << endl;
-			//showVector(data);
-			//cout << "KONIEC N_N" << endl;
-			
 			tmp = findMinValueR(data);
-			//cout << "TMP 1 " << "R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
 			orderedColletion.push_back(tmp);
 			RemoveElement(data, tmp);
-			 /*cout << "TMP 2 "<< "R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;*/
 			
 			 if (tmp.q > l.q) { //block added in PTMN
 				l.p = t - tmp.r;
 				t = tmp.r;
 				if (l.p > 0) {
-					// cout << "TMP 2 "<< "R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
-					orderedColletion.push_back(tmp);
+					orderedColletion.push_back(l);
 				}
 			} 
 		}
 		if (orderedColletion.empty() == false) {
-			/*cout << "WEKTOR N_G" << endl;
-			showVector(orderedColletion);
-			cout << "KONIEC N_G" << endl;*/
-
 			tmp2 = findMaxValueQ(orderedColletion);
-			/*cout << "TMP 1 " << "R: " << tmp2.r << " P: " << tmp2.p << " Q: " << tmp2.q << endl;*/
-			
 			RemoveElement(orderedColletion, tmp2);
-			/*cout << "TMP 2 R: " << tmp2.r << " P: " << tmp2.p << " Q: " << tmp2.q << endl;*/
-			
-			/*cout << "WEKTOR N_G 2" << endl;
-			showVector(orderedColletion);
-			cout << "KONIEC N_G 2" << endl << endl;*/
-
-			PI.push_back(tmp2);
 			l = tmp2;
 			t = t + tmp2.p;
 			Cmax = max(Cmax, t + tmp2.q);
-			k = k + 1;
 		}
 		else {
 			t = findMinValueR(data).r;
 		}
 	}
-	int pies = cmaxFunc(n, PI);
-	cout << "PIES: " << pies << endl;
 	return Cmax;
 }
 
@@ -161,20 +133,17 @@ int schragePMTNWithQueue(int n, vector <rpqcontainer> data) {
 			tmp = data.back();
 			queue.push(tmp);
 			data.pop_back();
-			//cout << "QUEUE TMP 1 R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
 			if (tmp.q > l.q) { //block added in PTMN
 				l.p = t - tmp.r;
 				t = tmp.r;
 				if (l.p > 0) {
-					queue.push(tmp);
+					queue.push(l);
 				}
 			}
 		}
 		if (queue.empty() == false) {
 			tmp = queue.top();
 			queue.pop();
-			//cout << "QUEUE TMP2: R: " << tmp.r << " P: " << tmp.p << " Q: " << tmp.q << endl;
-			
 			l = tmp;
 			t = t + tmp.p;
 			Cmax = max(Cmax, t + tmp.q);

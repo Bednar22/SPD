@@ -94,6 +94,7 @@ void RemoveElement(vector<rpqcontainer>& data, const rpqcontainer exampl) {
 		data.end());
 }
 
+//******************** Removing one even when two rpqcontainers are the same *********************
 
 //void RemoveElement(vector<rpqcontainer>& data, rpqcontainer exampl) {
 //	vector<rpqcontainer>::iterator vecIterator = data.begin();
