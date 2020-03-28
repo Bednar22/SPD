@@ -1,5 +1,0 @@
-﻿  spdlab1.cpp
-C:\Users\mBedn\source\repos\RPQalg\RPQalg\spdlab1.cpp(28,20): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\mBedn\source\repos\RPQalg\RPQalg\spdlab1.cpp(78,20): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-spdlab1.obj : error LNK2001: nierozpoznany symbol zewnętrzny "public: __thiscall rpqcontainer::rpqcontainer(void)" (??0rpqcontainer@@QAE@XZ)
-C:\Users\mBedn\source\repos\RPQalg\Release\RPQalg.exe : fatal error LNK1120: liczba nierozpoznanych elementów zewnętrznych: 1
