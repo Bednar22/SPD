@@ -155,3 +155,146 @@ int schragePMTNWithQueue(int n, vector <rpqcontainer> data) {
 	return Cmax;
 }
 
+int findBMax(int n, vector <rpqcontainer> pi, int Cmax) {
+	
+	int bMaxIndex = 0;
+	int* S = new int[n];
+	int* C = new int[n];
+
+	S[0] = pi[0].r;
+	C[0] = S[0] + pi[0].p;
+
+	for (int i = 1; i < n; i++) {
+		S[i] = max(pi[i].r, C[i - 1]);
+		C[i] = S[i] + pi[i].p;
+		
+		//cout << "SUMA B MAX: " << C[i] + pi[i].q << endl;
+		if (C[i] + pi[i].q == Cmax) {
+			bMaxIndex = max(i, bMaxIndex);
+			cout << " B MAX INDEX = " << bMaxIndex << endl;
+		}
+	}
+
+	delete[] S, C;
+	return bMaxIndex;
+}
+
+int findAMin(int n, int b, vector<rpqcontainer> pi, int Cmax) {
+	int aMinIndex=10000000;
+	int sum;
+	for (int i = 0; i < b; i++) {
+		sum = 0;
+		for (int j = i; j <= b; j++) {
+			sum = pi[j].p + sum;
+		}
+
+		//cout << "Q b = " << pi[b].q << endl;
+		//cout << "SUMA A MIN [ "<< i <<"] = " <<  sum << endl;
+		//cout << " r[" << i << "] = " << pi[i].r << endl;
+		//cout << "CALOSC : " << pi[i].r + sum + pi[b].q << endl;
+		if (pi[i].r + sum + pi[b].q == Cmax) {
+			aMinIndex = min(i,aMinIndex);
+			 cout << "Amin: " << aMinIndex << endl;
+		}
+		//cout << " NOWA PETLA " << endl;
+	}
+
+	return aMinIndex;
+}
+
+int findCMax(int n, int a, int b, vector<rpqcontainer> pi){
+	int cMaxIndex=0;
+	bool cExist=false;
+	for (int i = a; i < b; i++) {
+		if (pi[i].q < pi[b].q) {
+			cMaxIndex = max(i, cMaxIndex); // maybe sth else here
+			cExist = true;
+		}
+	}
+	if (cExist == true) {
+		return cMaxIndex;
+	}
+	else {
+		return -1;
+	}
+}
+
+vector<rpqcontainer> initiateKVec(int n, int b, int c, vector<rpqcontainer> pi) {
+	vector <rpqcontainer> K;
+	for (int i = c+1; i <= b; i++) {
+		K.push_back(pi[i]);
+	}
+
+	return K;
+}
+
+int sumP(vector <rpqcontainer> K) {
+	int sumPValue = 0;
+	for (int i = 0; i < K.size(); i++) {
+		sumPValue = K[i].p+sumPValue;
+	}
+	return sumPValue;
+}
+
+
+vector<rpqcontainer> Carlier(int n, vector <rpqcontainer> &data) {
+	cout << "DATA WEJŒCIOWA" << endl;
+	showVector(data);
+	//vector<rpqcontainer> pi = Schrage(n, data);
+	vector<rpqcontainer> piStar;
+	int upperBand = cmaxFunc(n, data);
+	int lowerBand;
+	data = Schrage(n, data);
+	cout << "DATA PO SCHRAGE" << endl;
+	showVector(data);
+	int Cmax = cmaxFunc(n, data);
+	cout << "CMAX = " << Cmax << endl;
+	int U = Cmax;;
+	if (U < upperBand) {
+		upperBand = U;
+		piStar = data;
+	}
+	int b = findBMax(n, data, Cmax);
+	cout << "b = " << b << endl;
+	int a = findAMin(n, b, data, Cmax);
+	cout << "a: " << a << endl;
+	int c = findCMax(n, a, b, data);
+	cout << "c: " << c << endl;
+	if (c == -1) { return piStar; } // JAK TO ZWROCIC NA ZEWNATRZ A NIE W TEJ PODFUNKCJI ??
+	vector<rpqcontainer> K;
+	//cout << "STEP: VEC INITIATION" << endl;
+	K = initiateKVec(n,b,c,data);
+	//cout << "VEC DONE" << endl;
+	int r_ = findMinValueR(K).r;
+	//cout << "R DONE" << endl;
+	int q_ = findMinValueQ(K).q;
+	//cout << "Q DONE" << endl;
+	int p_ = sumP(K);
+	//cout << "SUM P DONE" << endl;
+	int rToRestore = data[c].r;
+	//cout << "SAVED R" << endl;
+	data[c].r = max(data[c].r, r_ + p_);
+	//cout << " FOUND MAXED R" << endl;
+	lowerBand = schragePMTN(n, data);
+	cout << "  LB DONE" << endl;
+	if (lowerBand < upperBand) {
+		//cout << "INSIDE FIRST IF" << endl;
+		Carlier(n, data);
+	}
+	data[c].r = rToRestore;
+	cout << "R RESTORED" << endl;
+
+	int qToRestore = data[c].q;
+	//cout << "Q TO RESTORE SAVED" << endl;
+	data[c].q = max(data[c].q, q_ + p_);
+	//cout << "Q MAX FOUND" << endl;
+	lowerBand = schragePMTN(n, data);
+	//cout << "LB 2 DONE" << endl;
+	if (lowerBand < upperBand) {
+		//cout << "INSIDE 2nd IF" << endl;
+		Carlier(n, data);
+	}
+	data[c].q = qToRestore;
+	//cout << "Q RESTORED" << endl;
+	
+} //end of Cariler
