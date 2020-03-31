@@ -7,7 +7,7 @@ vector<rpqcontainer> schrageWithQueue(int n, vector <rpqcontainer> data);
 int schragePMTN(int n, vector <rpqcontainer> data);
 int schragePMTNWithQueue(int n, vector <rpqcontainer> data);
 int cmaxFunc(int n, vector <rpqcontainer> d);
-vector<rpqcontainer> Carlier(int n, vector <rpqcontainer> &data);
+vector<rpqcontainer> Carlier(int n, vector <rpqcontainer> data);
 
 //Carlier
 int findBMax(int n, vector <rpqcontainer> pi, int Cmax);

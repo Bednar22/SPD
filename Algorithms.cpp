@@ -84,7 +84,7 @@ int schragePMTN(int n, vector <rpqcontainer> data) {
 	int t = 0;
 	rpqcontainer l;
 	l.q=numeric_limits<int>::max(); // INFINITY
-	rpqcontainer tmp, tmp2; //just to help
+	rpqcontainer tmp; //just to help
 
 	while ((orderedColletion.empty() == false) || (data.empty() == false)) {
 		while ((data.empty() == false) && (findMinValueR(data).r <= t)) {
@@ -101,11 +101,11 @@ int schragePMTN(int n, vector <rpqcontainer> data) {
 			} 
 		}
 		if (orderedColletion.empty() == false) {
-			tmp2 = findMaxValueQ(orderedColletion);
-			RemoveElement(orderedColletion, tmp2);
-			l = tmp2;
-			t = t + tmp2.p;
-			Cmax = max(Cmax, t + tmp2.q);
+			tmp = findMaxValueQ(orderedColletion);
+			RemoveElement(orderedColletion, tmp);
+			l = tmp;
+			t = t + tmp.p;
+			Cmax = max(Cmax, t + tmp.q);
 		}
 		else {
 			t = findMinValueR(data).r;
@@ -168,10 +168,8 @@ int findBMax(int n, vector <rpqcontainer> pi, int Cmax) {
 		S[i] = max(pi[i].r, C[i - 1]);
 		C[i] = S[i] + pi[i].p;
 		
-		//cout << "SUMA B MAX: " << C[i] + pi[i].q << endl;
 		if (C[i] + pi[i].q == Cmax) {
 			bMaxIndex = max(i, bMaxIndex);
-			cout << " B MAX INDEX = " << bMaxIndex << endl;
 		}
 	}
 
@@ -187,16 +185,9 @@ int findAMin(int n, int b, vector<rpqcontainer> pi, int Cmax) {
 		for (int j = i; j <= b; j++) {
 			sum = pi[j].p + sum;
 		}
-
-		//cout << "Q b = " << pi[b].q << endl;
-		//cout << "SUMA A MIN [ "<< i <<"] = " <<  sum << endl;
-		//cout << " r[" << i << "] = " << pi[i].r << endl;
-		//cout << "CALOSC : " << pi[i].r + sum + pi[b].q << endl;
 		if (pi[i].r + sum + pi[b].q == Cmax) {
 			aMinIndex = min(i,aMinIndex);
-			 cout << "Amin: " << aMinIndex << endl;
 		}
-		//cout << " NOWA PETLA " << endl;
 	}
 
 	return aMinIndex;
@@ -236,65 +227,56 @@ int sumP(vector <rpqcontainer> K) {
 	return sumPValue;
 }
 
+bool  endOfCarlier = false;
+vector<rpqcontainer> piStar;
 
-vector<rpqcontainer> Carlier(int n, vector <rpqcontainer> &data) {
-	cout << "DATA WEJŒCIOWA" << endl;
-	showVector(data);
-	//vector<rpqcontainer> pi = Schrage(n, data);
-	vector<rpqcontainer> piStar;
-	int upperBand = cmaxFunc(n, data);
-	int lowerBand;
-	data = Schrage(n, data);
-	cout << "DATA PO SCHRAGE" << endl;
-	showVector(data);
-	int Cmax = cmaxFunc(n, data);
-	cout << "CMAX = " << Cmax << endl;
-	int U = Cmax;;
-	if (U < upperBand) {
-		upperBand = U;
-		piStar = data;
-	}
-	int b = findBMax(n, data, Cmax);
-	cout << "b = " << b << endl;
-	int a = findAMin(n, b, data, Cmax);
-	cout << "a: " << a << endl;
-	int c = findCMax(n, a, b, data);
-	cout << "c: " << c << endl;
-	if (c == -1) { return piStar; } // JAK TO ZWROCIC NA ZEWNATRZ A NIE W TEJ PODFUNKCJI ??
-	vector<rpqcontainer> K;
-	//cout << "STEP: VEC INITIATION" << endl;
-	K = initiateKVec(n,b,c,data);
-	//cout << "VEC DONE" << endl;
-	int r_ = findMinValueR(K).r;
-	//cout << "R DONE" << endl;
-	int q_ = findMinValueQ(K).q;
-	//cout << "Q DONE" << endl;
-	int p_ = sumP(K);
-	//cout << "SUM P DONE" << endl;
-	int rToRestore = data[c].r;
-	//cout << "SAVED R" << endl;
-	data[c].r = max(data[c].r, r_ + p_);
-	//cout << " FOUND MAXED R" << endl;
-	lowerBand = schragePMTN(n, data);
-	cout << "  LB DONE" << endl;
-	if (lowerBand < upperBand) {
-		//cout << "INSIDE FIRST IF" << endl;
-		Carlier(n, data);
-	}
-	data[c].r = rToRestore;
-	cout << "R RESTORED" << endl;
+vector <rpqcontainer> Carlier(int n, vector <rpqcontainer> data) {
+	if (endOfCarlier == false) {
+		//vector<rpqcontainer> pi = Schrage(n, data);
+		
+		int upperBand = cmaxFunc(n, data);
+		int lowerBand;
+		data = Schrage(n, data);
+		int Cmax = cmaxFunc(n, data);
+		//cout << "Cmax: " << Cmax << endl;
+		int U = Cmax;
+		if (U < upperBand) {
+			upperBand = U;
+			piStar = data;
+		}
+		int b = findBMax(n, data, Cmax);
+		//cout << "b = " << b << endl;
+		int a = findAMin(n, b, data, Cmax);
+		//cout << "a: " << a << endl;
+		int c = findCMax(n, a, b, data);
+		//cout << "c: " << c << endl;
+		if (c == -1) {
+			endOfCarlier = true;
+			return piStar;
+		}
+		else {
+			vector<rpqcontainer> K;
+			K = initiateKVec(n, b, c, data);
+			int r_ = findMinValueR(K).r;
+			int q_ = findMinValueQ(K).q;
+			int p_ = sumP(K);
 
-	int qToRestore = data[c].q;
-	//cout << "Q TO RESTORE SAVED" << endl;
-	data[c].q = max(data[c].q, q_ + p_);
-	//cout << "Q MAX FOUND" << endl;
-	lowerBand = schragePMTN(n, data);
-	//cout << "LB 2 DONE" << endl;
-	if (lowerBand < upperBand) {
-		//cout << "INSIDE 2nd IF" << endl;
-		Carlier(n, data);
+			int rToRestore = data[c].r;
+			data[c].r = max(data[c].r, r_ + p_);
+			lowerBand = schragePMTN(n, data);
+			if (lowerBand < upperBand) {
+				Carlier(n, data);
+			}
+			data[c].r = rToRestore;
+
+			int qToRestore = data[c].q;
+			data[c].q = max(data[c].q, q_ + p_);
+			lowerBand = schragePMTN(n, data);
+			if (lowerBand < upperBand) {
+				Carlier(n, data);
+			}
+			data[c].q = qToRestore;
+		}
 	}
-	data[c].q = qToRestore;
-	//cout << "Q RESTORED" << endl;
-	
+	return piStar;
 } //end of Cariler

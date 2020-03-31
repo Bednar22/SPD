@@ -34,8 +34,6 @@ struct CompareQ {
     }
 };
 
-
-
 int findSameVector(rpqcontainer sample, vector <rpqcontainer> data);
 bool func(const rpqcontainer& a, const rpqcontainer& b);
 bool func2(const rpqcontainer& a, const rpqcontainer& b);
